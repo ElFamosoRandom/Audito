@@ -23,8 +23,6 @@
         <label for="time">Heure planifée : </label>
         <input id="time" v-model="event.time" type="time" name="time">
         <br/>
-        <label for="photo">Affiche : </label>
-        <input id="photo" @change="onFileSelected" type="file" name="photo">
         <br/>
         <div id="submit" @click="submitForm">Planifier cet évènement</div>
 
@@ -59,36 +57,26 @@
             	eventGenre : "",
             	dateEvent : "", 
                 time : "",
-                date : "",
-                photoId : {},
+                date : ""
             },
             seats : [],
-            selectedFile : []
         }
     },
     methods : {
 	loadEventTypes(){
           axios.get("/api/event_types").then((res) =>{
               this.eventTypes = res.data;
+              console.log(this.eventTypes);
           });
     },
-    onFileSelected(event) {
-        //console.log(event);
-        console.log(event.target.files[0])
-        this.selectedFile = event.target.files[0];
-        console.log(this.selectedFile);
-    },
     submitForm(){
-        const fd = new FormData();
-        fd.append('image', this.selectedFile, this.selectedFile.name);
-        console.log(fd);
-        axios.post("api/photos", fd).then((res) => {
+        /*axios.post("/api/photos", this.photo).then((res) => {
             console.log(res);
-        });
-        this.event.date=this.event.dateEvent+" "+this.event.time;
+        });*/
+        this.event.date=this.event.dateEvent+""+this.event.time;
         this.event.eventType="/api/event_types/"+this.event.eventType;
       	axios.post("/api/events", this.event).then((res) => {
-      		console.log(res);
+            console.log(res);
       	});
     },
     select(thisButton){
@@ -111,7 +99,6 @@
             console.log(this.seats)
         }
     },
-    
     getplaces(col,row,table,startCol,startrow){
         let thisTable = document.querySelector(table);
         

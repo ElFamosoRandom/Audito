@@ -5,7 +5,7 @@
         <div class="homeContent">
             <div id="dropdown">
                 <select id="select" @change="getEvent()" v-model="actualweek">
-                    <option v-for="date in datetable" :key="date.i" v-bind:value="date.id" :selected="actualweek">{{"Semaine du "+date.FirstDay+" au "+date.LastDay}}</option>
+                    <option v-for="date in datetable" :key="date.i" v-bind:value="date.id" :selected="actualweek" class="opt">{{"Semaine du "+date.FirstDay+" au "+date.LastDay}}</option>
                 </select>   
             </div>
             <div class="eventCardContainer">
@@ -241,5 +241,15 @@
         transform: translateY(-50%);
         margin: 50vh auto 0 auto;
         text-align: center;
+    }
+
+    #select{
+        font-size: 1.1vw;
+        background-color : grey;
+    }
+
+    .opt{
+        font-size: 1.1vw;
+        background-color: orange;
     }
 </style>
