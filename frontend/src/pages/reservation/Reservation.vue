@@ -24,6 +24,7 @@
             </div>
         </section>
         <button class="validate"> RESERVER !</button>
+        
 
         <!--<button class="seat" v-for="seat in seats" :key="seat.id" :id="seat.id" v-on:click="select($event)"> </button>
         -->
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+	import axios from "axios";
     
     export default {
         name : "Reservation",
@@ -44,6 +46,7 @@
        data(){
             return {
                 seats : [],
+                
             }
         },
         methods : 
@@ -83,6 +86,7 @@
                         let thisCase = document.createElement("td")
                         thisCase.classList.add("seat")
                         thisLine.appendChild(thisCase)
+                        
 
                         let trueId = j + startCol
                         let thisSeatrow = String.fromCharCode(i + 65 +startrow)
@@ -90,12 +94,17 @@
                         if (trueId<=5 || trueId >= 31) 
                         {
                             thisCat = "C"
+                            
                         } else if (i + startrow >= 10) {
                             thisCat = "A"
+                            
                         }
                         let thisSeatId = thisSeatrow+"-"+trueId
                         thisCase.setAttribute("id",thisSeatId)
                         thisCase.setAttribute("cat",thisCat)
+                        
+                        
+                        
                         thisCase.addEventListener("click",(e) => {
                             this.select(e.target)
                             
@@ -105,12 +114,13 @@
                 //console.log(seats)
            },
            
+           
         },
         mounted(){
            this.getplaces(5,10,".catB1",1,0)
            this.getplaces(25,10,".catC",6,0)
            this.getplaces(5,10,".catB2",31,0)
-           this.getplaces(10,5,".catA",13,10)
+           this.getplaces(20,5,".catA",8,10)
     }
         }
 </script>
@@ -169,6 +179,16 @@
             margin: 0.2vh;
             background-color: rgb(197, 197, 197);
             
+        }
+        .seatAdd{
+            width: 1vw;
+            height: 1vw;
+            border: none;
+            margin: 0.2vh;
+            background-color: rgb(197, 197, 197);
+        }
+        .seatAdd:hover{
+            background-color: rgb(90, 90, 90);
         }
         .seat:hover{
             background-color: rgb(90, 90, 90);

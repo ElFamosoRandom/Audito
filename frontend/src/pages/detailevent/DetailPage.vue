@@ -6,6 +6,9 @@
             <p>{{events.eventName}}</p>
             <p>{{events.eventDescription}}</p>
             <p>{{events.eventGenre}}</p>
+            <div>
+            <router-link class="navItem navItemalign-right" v-bind:to="'/reservation/'+this.$route.params.id"> Je réserve</router-link>
+            </div>
             
         </div>
         

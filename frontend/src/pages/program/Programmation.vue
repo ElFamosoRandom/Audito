@@ -1,10 +1,12 @@
 <template>
     <div>
-        <h1>Image ianis</h1>
+        <h1>Programmation disponible dans notre salle</h1>
         
         <div class="homeContent">
             <div id="dropdown">
-
+                <select id="select" @change="getEvent()" v-model="actualweek">
+                    <option v-for="date in datetable" :key="date.i" v-bind:value="date.id" :selected="actualweek">{{"Semaine du "+date.FirstDay+" au "+date.LastDay}}</option>
+                </select>   
             </div>
             <div class="eventCardContainer">
                 
@@ -13,6 +15,8 @@
                 </dayCard>     
                 
             </div>
+
+            <h2 id="nullEvent">Pas d'évènement cette semaine !</h2>
         </div>
         
     </div>
@@ -29,11 +33,18 @@
 
     export default {
         name : "Programmation",
+        
         components: {DayCard},
+        
         data(){
+            
             return {
                 events : [],
+                datetable: [],
+                key : [],
+                actualweek : moment().week()
             }
+
         },
         methods : {
             
@@ -54,79 +65,77 @@
 
                 
 
-                var select = document.createElement('select');
-                select.id = "select";
+                /*var select = document.createElement('select');
+                select.id = "select";*/
                 
-
-                var datetable = [];
-                for(var i=1; i<=52; i++){
-                    var weektable = [];
+                for(var i=1; i<=53; i++){
+                    var weektable = {
+                        id:'',
+                        FirstDay:'',
+                        LastDay:'',
+                    };
                     var FirstDay = moment().day("Monday").isoWeek(i)
                     var LastDay = moment().day("Sunday").isoWeek(i);
+                    
 
                     
-                
-                    weektable.push(moment(FirstDay).format('DD/MM/YYYY'))
-                    weektable.push(moment(LastDay).format('DD/MM/YYYY'))
-                    datetable.push(weektable);
-                    var option = document.createElement('option');
+                    weektable.id = i;
+                    weektable.FirstDay = (moment(FirstDay).format('DD/MM/YYYY'))
+                    weektable.LastDay = (moment(LastDay).format('DD/MM/YYYY'))
+                    this.datetable.push(weektable);
+
+                    /*var option = document.createElement('option');
                     option.innerHTML = "semaine du " + weektable[0] + " au " + weektable[1]
                     option.value = i;
-                    select.appendChild(option);
+                    select.appendChild(option);*/
                 }
-                var selectdiv = document.getElementById("dropdown")
-                selectdiv.appendChild(select);
+                /*var selectdiv = document.getElementById("dropdown")
+                selectdiv.appendChild(select);*/
             },
-            
-            testfunction(){
 
+            getEvent(){
+
+                console.log(this.actualweek)
                 
-                var selectdiv = document.getElementById("dropdown")
-                var select = document.getElementById("select")
-                selectdiv.appendChild(select);
+                let weekArray = [1,2,3,4,5,6,7]
+                let weekLenght = Object.keys(weekArray).length;
+                let weekIntArray = []
+                //console.log(this.key)
+                let optionvalue = this.actualweek
+                //console.log(optionvalue);
+                
+                //console.log(weekLenght) 
+                for(let i = 0; i< weekLenght; i++){
+                    let dayArray = []
 
-                select.addEventListener("change",function(e){
-
-                    
-                    var weekArray = [1,2,3,4,5,6,7]
-                    var weekLenght = Object.keys(weekArray).length;
-                    var weekIntArray = []
-                    var optionvalue = parseInt(e.target.value)
+                    let FirstDay = moment().day(weekArray[i]).isoWeek(optionvalue);
                         
-                        
-                        
-                    //console.log(weekLenght) 
-                    for(let i = 0; i< weekLenght; i++){
-                        var dayArray = []
+                    dayArray.push(parseInt(moment(FirstDay).format('DD')))
+                    dayArray.push(parseInt(moment(FirstDay).format('MM')))
+                    dayArray.push(parseInt(moment(FirstDay).format('YYYY')))
 
-                         var FirstDay = moment().day(weekArray[i]).isoWeek(optionvalue);
-                            
-                        dayArray.push(parseInt(moment(FirstDay).format('DD')))
-                        dayArray.push(parseInt(moment(FirstDay).format('MM')))
-                        dayArray.push(parseInt(moment(FirstDay).format('YYYY')))
+                    weekIntArray.push(dayArray)
+                    //console.log(weekIntArray);
+                }
+                //console.log(weekIntArray)
 
-                        weekIntArray.push(dayArray)
-                        //console.log(weekIntArray);
+                axios.get("/api/events").then((res) =>{
 
-                            
-            
-                    }
-                    //console.log(weekIntArray)
 
-                    axios.get("/api/events").then((res) =>{
-
-                        //this.events = res.data
-
-                        var arrayData = res.data
-                        var arrayLenght = Object.keys(arrayData).length;
-
+                        let arrayData = res.data
+                        let arrayLenght = Object.keys(arrayData).length;
+                        //console.log(arrayData);
                         var elementget = []
                         for(let i=0; i<= arrayLenght-1; i++){
-                            var eventDate = arrayData[i].date.slice(0, 10)
-                            var explodeDate = eventDate.split('-');
-                            var parsedDay = parseInt(explodeDate[2])
-                            var parsedMonth = parseInt(explodeDate[1])
-                            var parsedYear = parseInt(explodeDate[0])
+                            let eventDate = arrayData[i].date.slice(0, 10)
+                            let explodeDate = eventDate.split('-');
+                            let parsedDay = parseInt(explodeDate[2])
+                            let parsedMonth = parseInt(explodeDate[1])
+                            let parsedYear = parseInt(explodeDate[0])
+
+                            //console.log(parsedDay);
+                            //console.log(weekIntArray[1][0]);
+                            //console.log(weekIntArray[6][0])
                                 
                                 
 
@@ -135,30 +144,42 @@
                                     if(weekIntArray[0][2] <= parsedYear && weekIntArray[6][2] >= parsedYear){
                                         //this.events.push(arrayData[i]);
                                         //console.log(arrayData[i])
+                                        //this.events =  arrayData[i];
                                         elementget.push(arrayData[i]);
-                                        console.log(elementget)
-                                        
+                                       
                                     }
                                 }
                             }
-                        } 
-                    }) 
-                });
-            }       
+                        }
+                        this.events = elementget;
+
+                        if(this.events.length == 0){
+                            console.log("yarien");
+                            let message = document.getElementById("nullEvent")
+                            message.innerHTML = "Pas d'évènement cette semaine !"
+                        }
+                        else{
+                            let message = document.getElementById("nullEvent")
+                            message.innerHTML = ""
+                            console.log(this.events);
+                        }
+                    })
+            },   
+             
+
+     
         },
         mounted(){
             //this.loadEvent();
             this.selectFunction();
-            this.testfunction();
-            
-
+            this.getEvent();
         }
     }
 
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss">
     .evtCard{
         flex: 0 1;
         display: flex;
@@ -209,13 +230,16 @@
             .evtDescription{
                 
                 margin: 5vh;
+                overflow-x: hidden;
             }
         }
+    }
 
-        
-        
-        
-
-        
+    #nullEvent{
+        width: 50vh;
+        font-size: 2.5vw;
+        transform: translateY(-50%);
+        margin: 50vh auto 0 auto;
+        text-align: center;
     }
 </style>
