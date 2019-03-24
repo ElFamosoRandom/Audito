@@ -12,6 +12,7 @@ import Detail from './pages/detailevent/DetailPage'
 import Add from './pages/addevent/AddEvent'
 import Reservation from './pages/reservation/Reservation'
 import DeleteEvent from './pages/deleteevent/DeleteEvent'
+import Tarif from './pages/tarif/Tarif'
 
 Vue.use(Router)
 
@@ -62,6 +63,11 @@ export default new Router({
             path: '/reservation/:id',
             name: 'reservation',
             component: Reservation
+        },
+        {
+            path: '/tarif',
+            name: 'tarif',
+            component: Tarif
         }
     ]
 })
