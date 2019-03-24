@@ -3,10 +3,10 @@
         <div id="nav">
             <router-link class="navItem navItemalign-right" to="/login"> Login</router-link>
             <router-link class="navItem navItemalign-right" to="/programmation"> Programmation</router-link>
-            <router-link class="navItem navItemalign-right" to="/ianis"> Tarifs</router-link>
+            <router-link class="navItem navItemalign-right" to="/tarif"> Tarifs</router-link>
             <router-link class="navItem navItemalign-right" to="/addevent"> Ajout évènement</router-link>
+            <router-link class="navItem navItemalign-right" to="/deleteevent">Supprimer un évenement</router-link>
             <router-link class="navItem navTitle" to="/">Home</router-link>
-            <router-link class="navItem navTitle" to="/deleteevent">Delete</router-link>
         </div>
         <section class="mainContent">
             <router-view/>
