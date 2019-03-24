@@ -1,18 +1,21 @@
 <template>
     <div>
-        <h1>Programmation disponible dans notre salle</h1>
+        <h1 class="configTitle">Programmation disponible dans notre salle</h1>
         
         <div class="homeContent">
-            <div id="dropdown">
-                <select id="select" @change="getEvent()" v-model="actualweek">
+            <div id="dropdown" class="FormFieldContainer">
+                <select id="select" @change="getEvent()" v-model="actualweek" class="formFields">
                     <option v-for="date in datetable" :key="date.i" v-bind:value="date.id" :selected="actualweek" class="opt">{{"Semaine du "+date.FirstDay+" au "+date.LastDay}}</option>
                 </select>   
             </div>
             <div class="eventCardContainer">
                 
-                <dayCard v-for="event in events" :event="event" :key="event.id">
-            
-                </dayCard>     
+                <article class="FormFieldContainer progItem" v-for="event in events" :event="event" :key="event.id">
+                    {{event.eventName}}
+                    <router-link class="formFields align-right" :to="'/detail/' + event.id">Accèder au détail</router-link>
+                </article>
+                
+                     
                 
             </div>
 
@@ -180,76 +183,44 @@
 
 
 <style lang="scss">
-    .evtCard{
-        flex: 0 1;
-        display: flex;
-        height: 70vh;
-        min-width: 60vw;
-        margin: 0.5vw;
-        background-color: $dark;
-        box-shadow: 5px 5px 10px rgba(5, 5, 5, 0.521);
-        flex-direction: row;
-        border-radius: 10px;
-        
-        .leftSide{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            flex: 0 0;
-
-
-            .cardImage{
-            height: 50vh;
-            margin:  0 0 0vh 2vw;
-            flex: 0 0;
-            }
-
-            .btn{
-                margin:  1vh 0 0 2vw;
-                height : 8vh;
-                background-color: #353535;
-                border: none;
-            }
-        }
-        .rightSide{
-
-            display: flex;
-            flex-direction: column;
-            margin:  5vh;
-            flex: 1 1;
-            background-color: rgb(24, 24, 24);
-            color:$active-text-color;
-
-            .evtTitle{
-            flex: 0 1;
-            color: $active-text-color;
-            margin: 5vh;
-            font-size: 1.2em;
-            }
-
-            .evtDescription{
-                
-                margin: 5vh;
-                overflow-x: hidden;
-            }
-        }
-    }
+    
 
     #nullEvent{
         width: 50vh;
         font-size: 2.5vw;
         transform: translateY(-50%);
-        margin: 50vh auto 0 auto;
+        margin: 20vh auto 0 auto;
         text-align: center;
     }
 
-    #select{
+    /*#select{
         font-size: 1.1vw;
         background-color : grey;
+    }*/
+    #dropdown{
+        margin:  5vh auto 5vh auto;
+        width: 20vw;
     }
-
     .opt{
         font-size: 1.1vw;
-        background-color: orange;
+        //background-color: orange;
+    }
+    .eventCardContainer{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 42vw;
+        margin: auto;
+    }
+    .progItem{
+        margin: 1vh auto 1vh auto;
+        width : 40vw !important;
+        display: flex;
+        flex-direction: row;
+        line-height: 5vh;
+        justify-content: end;
+        .align-right{
+            margin-left: 25vw;
+        }
     }
 </style>

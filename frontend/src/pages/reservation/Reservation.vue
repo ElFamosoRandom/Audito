@@ -23,7 +23,10 @@
                 </select>
             </div>
         </section>
-        <button class="validate"> RESERVER !</button>
+        <button class="validate" v-on:click="reserve()"> RESERVER !</button>
+
+        <!--insert 450 places en base
+            <button class="validate" v-on:click="insertAll()"> inserer places</button>-->
         
 
         <!--<button class="seat" v-for="seat in seats" :key="seat.id" :id="seat.id" v-on:click="select($event)"> </button>
@@ -46,7 +49,10 @@
        data(){
             return {
                 seats : [],
-                
+                insertSeats : [],
+                dbSeats : {},
+                reservedSeats : [],
+                categories :{"A" : 1, "B" : 2,"C" : 3},
             }
         },
         methods : 
@@ -84,10 +90,8 @@
                     
                     for (let j = 0; j < col; j++) {
                         let thisCase = document.createElement("td")
-                        thisCase.classList.add("seat")
+                       
                         thisLine.appendChild(thisCase)
-                        
-
                         let trueId = j + startCol
                         let thisSeatrow = String.fromCharCode(i + 65 +startrow)
                         let thisCat = "B"
@@ -102,25 +106,81 @@
                         let thisSeatId = thisSeatrow+"-"+trueId
                         thisCase.setAttribute("id",thisSeatId)
                         thisCase.setAttribute("cat",thisCat)
-                        
-                        
-                        
-                        thisCase.addEventListener("click",(e) => {
+                        if (!this.reservedSeats.includes(thisSeatId)) {
+                            thisCase.classList.add("seat")
+                            let TheSeatCat = "/api/categories/"+this.categories[thisCat]
+                            
+                            let TheSeat = {category : TheSeatCat, placeRow: thisSeatrow ,placeColumn : trueId}
+                            //console.log(TheSeat)
+                            this.insertSeats.push(TheSeat)
+                            thisCase.addEventListener("click",(e) => {
                             this.select(e.target)
                             
                         }); 
+                        }
+                        else{
+                            thisCase.classList.add("disabledSeat")
+                        }
+                        
                     }
                 }
                 //console.log(seats)
            },
-           
+           insertAll(){
+               /*for(let i = 0;i<this.insertSeats.length;i++){
+                   axios.post("/api/places",this.insertSeats[i])
+
+               }
+               console.log(this.insertSeats.length + " places insérées")*/
+           },
+           getDatabasePlaces(){
+               console.log("oui?")
+               axios.get("/api/places").then((res) =>{
+                   console.log(res.data)
+                   for (let i = 0; i < res.data.length; i++) {
+                       let thisDbPlaces = res.data[i];
+                       let Placekey = thisDbPlaces.placeRow + "-" + thisDbPlaces.placeColumn;
+                       if (this.reservedSeats.includes(thisDbPlaces.id)) {
+                           this.dbSeats[Placekey] = "unaviable"
+                       }else{
+                           this.dbSeats[Placekey] = thisDbPlaces;
+
+                       }
+                       
+                   }
+                   console.log(this.dbSeats)
+               })
+           },
+           reserve(){
+               let thisEvent = "/api/events/"+this.$route.params.id;
+               let reservTab = this.seats;
+               reservTab.forEach(e =>{
+                   let placeId = "/api/places/"+this.dbSeats[e.id].id;
+                   let Reservation = {userId : "/api/users/1",eventId : thisEvent, placeId : placeId};
+                   axios.post("/api/reservations",Reservation)
+               })
+           },
+           getReservations(){
+               axios.get("/api/reservations").then((res) =>{
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data.eventId == this.$route.params.id) {
+                            this.reservedSeats.push(res.data.placeId)
+                            
+                        }
+                       
+                       
+                   }
+               })
+           }
            
         },
         mounted(){
-           this.getplaces(5,10,".catB1",1,0)
-           this.getplaces(25,10,".catC",6,0)
-           this.getplaces(5,10,".catB2",31,0)
-           this.getplaces(20,5,".catA",8,10)
+            this.getReservations()
+            this.getDatabasePlaces()
+            this.getplaces(5,10,".catB1",1,0)
+            this.getplaces(25,10,".catC",6,0)
+            this.getplaces(5,10,".catB2",31,0)
+            this.getplaces(20,5,".catA",8,10)
     }
         }
 </script>
@@ -166,6 +226,10 @@
     .selected:hover{
         background-color: rgb(67, 124, 126)!important;
     }
+    .selectedAdd{
+        background-color: rgb(233, 233, 233)!important;
+
+    }
     .placesContainer{
     padding: 20vw;
     }
@@ -178,6 +242,14 @@
             border: none;
             margin: 0.2vh;
             background-color: rgb(197, 197, 197);
+            
+        }
+        .disabledSeat{
+            width: 2vw;
+            height: 2vw;
+            border: none;
+            margin: 0.2vh;
+            background-color: rgb(228, 228, 228);
             
         }
         .seatAdd{

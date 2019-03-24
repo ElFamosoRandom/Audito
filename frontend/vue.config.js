@@ -1,6 +1,6 @@
 module.exports = {
     devServer: {
-        proxy: 'http://10.103.1.200:8098'
+        proxy:'http://127.0.0.1:8000' //'http://10.103.1.200:8098'
     },
     chainWebpack: config => {
         const oneOfsMap = config.module.rule('scss').oneOfs.store

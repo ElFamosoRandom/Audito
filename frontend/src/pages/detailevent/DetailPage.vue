@@ -1,14 +1,20 @@
 <template>
     <div>
-        <h1>Detail</h1>
-        <div>
+        
+        <div class="detailContainer">
             
-            <p>{{events.eventName}}</p>
-            <p>{{events.eventDescription}}</p>
-            <p>{{events.eventGenre}}</p>
-            <div>
-            <router-link class="navItem navItemalign-right" v-bind:to="'/reservation/'+this.$route.params.id"> Je réserve</router-link>
-            </div>
+            <article class="eventInfos">
+                <p class="FormFieldContainer"><span class="formFields">{{events.eventName}}</span></p>
+                <p class="FormFieldContainer"><span class="formFields">{{events.eventGenre}}</span></p>
+                <div>
+                    <router-link class="FormFieldContainer formFieldBtn" v-bind:to="'/reservation/'+this.$route.params.id"><span  class="formFields"> Je réserve</span></router-link>
+                </div>
+                
+            </article>
+            <article class="eventDescription">
+                <p>{{events.eventDescription}}</p>
+            </article>
+           
             
         </div>
         
@@ -42,9 +48,31 @@
     }
 </script>
 
-<style scoped lang="scss">
-
-    h1 {
-        color : $text-color;
-    }
+<style lang="scss">
+    
+    .detailContainer{
+        
+        width : 46vw;
+        margin: 10vh auto 0 auto;
+        .eventInfos{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            line-height: 5vh;
+            text-align: center;
+            
+        }
+        .eventDescription{
+            width: 96%;min-height: 50vh;
+            background-color: rgb(38, 138, 129);
+            color:rgb(83, 182, 174);
+            padding: 0.5vw;
+            margin: 0.5vw;
+            display: flex;
+            align-content: center;
+            box-shadow: 5px 5px 10px rgba(31, 82, 79, 0.849);
+            
+        }
+    }   
+    
 </style>
